@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'providers/splash_provider.dart';
 import 'screens/splash_screen.dart';
-import 'screens/home_screen.dart'; // Add this import
+import 'constants/app_routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,8 +32,9 @@ class MyApp extends StatelessWidget {
               primaryColor: const Color(0xFF2E5BFF),
               scaffoldBackgroundColor: const Color(0xFFF5F7FA),
             ),
-            home: const SplashScreen(),
-            routes: {'/home': (context) => const HomeScreen()},
+            initialRoute: AppRoutes.splash,
+            routes: AppRoutes.routes,
+            onGenerateRoute: AppRoutes.onGenerateRoute,
           ),
         );
       },

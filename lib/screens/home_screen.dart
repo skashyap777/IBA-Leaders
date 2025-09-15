@@ -1,6 +1,7 @@
 // home_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../constants/app_routes.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -237,48 +238,60 @@ class _HomeScreenState extends State<HomeScreen> {
       {'icon': Icons.home, 'label': 'Home', 'isActive': true},
       {'icon': Icons.dashboard, 'label': 'Dashboard', 'isActive': false},
       {'icon': Icons.people, 'label': 'Alliance', 'isActive': false},
-      {'icon': Icons.post_add, 'label': 'Post', 'isActive': false},
+      {'icon': Icons.grid_view, 'label': 'Post', 'isActive': false},
     ];
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: navItems.map((item) {
-        return Column(
-          children: [
-            Container(
-              width: 60.w,
-              height: 60.h,
-              decoration: BoxDecoration(
-                color: item['isActive']
-                    ? const Color(0xFF2E5BFF)
-                    : Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+      children: navItems.asMap().entries.map((entry) {
+        final index = entry.key;
+        final item = entry.value;
+        return GestureDetector(
+          onTap: () {
+            // Handle navigation based on index
+            if (index == 1) { // Dashboard
+              Navigator.pushNamed(context, AppRoutes.dashboard);
+            } else if (index == 3) { // Post
+              Navigator.pushNamed(context, AppRoutes.postScreen);
+            }
+          },
+          child: Column(
+            children: [
+              Container(
+                width: 60.w,
+                height: 60.h,
+                decoration: BoxDecoration(
+                  color: item['isActive']
+                      ? const Color(0xFF2E5BFF)
+                      : Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  item['icon'],
+                  color: item['isActive']
+                      ? Colors.white
+                      : const Color(0xFF2E5BFF),
+                  size: 24.w,
+                ),
               ),
-              child: Icon(
-                item['icon'],
-                color: item['isActive']
-                    ? Colors.white
-                    : const Color(0xFF2E5BFF),
-                size: 24.w,
+              SizedBox(height: 8.h),
+              Text(
+                item['label'],
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              item['label'],
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: Colors.black87,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
+            ],
+          ),
         );
       }).toList(),
     );

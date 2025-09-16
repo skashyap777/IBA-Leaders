@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'login_screen.dart';
-import 'home_screen.dart'; // Add this import
+import 'main_screen.dart';
 import '../constants/app_constants.dart';
 
 class CreatePasswordScreen extends StatefulWidget {
@@ -55,10 +55,10 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           ),
         );
 
-        // Navigate to home screen
+        // Navigate to main screen
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          MaterialPageRoute(builder: (context) => const MainScreen()),
           (route) => false,
         );
       }

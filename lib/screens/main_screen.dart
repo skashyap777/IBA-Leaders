@@ -1500,7 +1500,53 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  // ALLIANCE CONTENT (extracted from alliance screen)
+  // Alliance request statuses for main screen
+  List<String> allianceRequestStatuses = List.generate(6, (index) => 'pending');
+  
+  void _acceptAllianceRequest(int index) {
+    print('🟢 MAIN SCREEN - ACCEPT REQUEST CALLED - Index: $index');
+    setState(() {
+      allianceRequestStatuses[index] = 'accepted';
+    });
+    print('✅ MAIN SCREEN - Status changed to: ${allianceRequestStatuses[index]}');
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('✅ Request Accepted in Main Screen!'),
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+  
+  void _rejectAllianceRequest(int index) {
+    print('🔴 MAIN SCREEN - REJECT REQUEST CALLED - Index: $index');
+    setState(() {
+      allianceRequestStatuses[index] = 'rejected';
+    });
+    print('❌ MAIN SCREEN - Status changed to: ${allianceRequestStatuses[index]}');
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('❌ Request Rejected in Main Screen'),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+  
+  void _openAllianceMessage() {
+    print('💬 MAIN SCREEN - MESSAGE BUTTON CLICKED');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('💬 Opening message from Main Screen...'),
+        backgroundColor: const Color(0xFF2E5BFF),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  // ALLIANCE CONTENT (UPDATED with working buttons)
   Widget _buildAllianceContent() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1519,7 +1565,14 @@ class _MainScreenState extends State<MainScreen> {
             ),
             TextButton(
               onPressed: () {
-                // Handle Send Request
+                print('📤 Send Request button clicked');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('📤 Send Request clicked!'),
+                    backgroundColor: const Color(0xFF2E5BFF),
+                    duration: Duration(seconds: 1),
+                  ),
+                );
               },
               child: Text(
                 'Send Request',
@@ -1538,68 +1591,223 @@ class _MainScreenState extends State<MainScreen> {
           physics: const NeverScrollableScrollPhysics(),
           itemCount: 6, // Example count
           itemBuilder: (context, index) {
-            return _buildPendingRequestItem();
+            return _buildMainScreenPendingRequestItem(index);
           },
         ),
       ],
     );
   }
 
-  Widget _buildPendingRequestItem() {
-    return Card(
+  Widget _buildMainScreenPendingRequestItem(int index) {
+    String status = allianceRequestStatuses[index];
+    print('📋 MAIN SCREEN - Building item $index with status: $status');
+    
+    return Container(
       margin: EdgeInsets.symmetric(vertical: 8.h),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-      child: Padding(
-        padding: EdgeInsets.all(10.w),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 25.w,
-              backgroundImage: const AssetImage(
-                'lib/assets/images/women.jpg',
-              ), // Use the provided image
-            ),
-            SizedBox(width: 10.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      child: Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(16.w),
+          child: Column(
+            children: [
+              // Top Row - Profile Info
+              Row(
                 children: [
-                  Text(
-                    'Shilpa Mehta',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
+                  CircleAvatar(
+                    radius: 30.w,
+                    backgroundImage: const AssetImage(
+                      'lib/assets/images/women.jpg',
                     ),
                   ),
-                  Text(
-                    'Wordpress Developer',
-                    style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
-                  ),
-                  Text(
-                    'Noida, Uttar Pradesh, India',
-                    style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
+                  SizedBox(width: 15.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Shilpa Mehta',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          'Wordpress Developer',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+                        Text(
+                          'Noida, Uttar Pradesh, India',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-            ),
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 15.w,
-                  backgroundColor: Colors.green,
-                  child: Icon(Icons.check, color: Colors.white, size: 15.w),
-                ),
-                SizedBox(width: 10.w),
-                CircleAvatar(
-                  radius: 15.w,
-                  backgroundColor: Colors.red,
-                  child: Icon(Icons.delete, color: Colors.white, size: 15.w),
-                ),
-              ],
-            ),
-          ],
+              
+              SizedBox(height: 16.h),
+              
+              // Bottom Row - Action Buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  if (status == 'pending') ...
+                    _buildMainScreenPendingButtons(index)
+                  else if (status == 'accepted')
+                    _buildMainScreenAcceptedButton()
+                  else if (status == 'rejected')
+                    _buildMainScreenRejectedBadge(),
+                ],
+              ),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+  
+  List<Widget> _buildMainScreenPendingButtons(int index) {
+    return [
+      // Accept Button
+      ElevatedButton.icon(
+        onPressed: () => _acceptAllianceRequest(index),
+        icon: Icon(
+          Icons.check_circle,
+          size: 18.sp,
+          color: Colors.white,
+        ),
+        label: Text(
+          'Accept',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
+          padding: EdgeInsets.symmetric(
+            horizontal: 16.w,
+            vertical: 8.h,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          elevation: 2,
+        ),
+      ),
+      
+      SizedBox(width: 12.w),
+      
+      // Reject Button
+      ElevatedButton.icon(
+        onPressed: () => _rejectAllianceRequest(index),
+        icon: Icon(
+          Icons.cancel,
+          size: 18.sp,
+          color: Colors.white,
+        ),
+        label: Text(
+          'Reject',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.red,
+          foregroundColor: Colors.white,
+          padding: EdgeInsets.symmetric(
+            horizontal: 16.w,
+            vertical: 8.h,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          elevation: 2,
+        ),
+      ),
+      
+    ];
+  }
+
+  Widget _buildMainScreenAcceptedButton() {
+    return ElevatedButton.icon(
+      onPressed: _openAllianceMessage,
+      icon: Icon(
+        Icons.message,
+        size: 18.sp,
+        color: Colors.white,
+      ),
+      label: Text(
+        'Message',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFF2E5BFF),
+        foregroundColor: Colors.white,
+        padding: EdgeInsets.symmetric(
+          horizontal: 20.w,
+          vertical: 10.h,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25.r),
+        ),
+        elevation: 3,
+      ),
+    );
+  }
+
+  Widget _buildMainScreenRejectedBadge() {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 16.w,
+        vertical: 8.h,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.red.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(
+          color: Colors.red.withOpacity(0.5),
+          width: 1.5,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.block,
+            color: Colors.red,
+            size: 16.sp,
+          ),
+          SizedBox(width: 4.w),
+          Text(
+            'Rejected',
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: Colors.red,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }

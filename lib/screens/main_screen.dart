@@ -89,26 +89,31 @@ class _MainScreenState extends State<MainScreen> {
         // Notification Icons
         Row(
           children: [
-            Stack(
-              children: [
-                Icon(
-                  Icons.notifications_outlined,
-                  size: 24.w,
-                  color: Colors.grey[600],
-                ),
-                Positioned(
-                  right: 0,
-                  top: 0,
-                  child: Container(
-                    width: 8.w,
-                    height: 8.h,
-                    decoration: const BoxDecoration(
-                      color: Colors.orange,
-                      shape: BoxShape.circle,
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.notifications);
+              },
+              child: Stack(
+                children: [
+                  Icon(
+                    Icons.notifications_outlined,
+                    size: 24.w,
+                    color: Colors.grey[600],
+                  ),
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Container(
+                      width: 8.w,
+                      height: 8.h,
+                      decoration: const BoxDecoration(
+                        color: Colors.orange,
+                        shape: BoxShape.circle,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             SizedBox(width: 15.w),
             Stack(
@@ -1502,14 +1507,16 @@ class _MainScreenState extends State<MainScreen> {
 
   // Alliance request statuses for main screen
   List<String> allianceRequestStatuses = List.generate(6, (index) => 'pending');
-  
+
   void _acceptAllianceRequest(int index) {
     print('🟢 MAIN SCREEN - ACCEPT REQUEST CALLED - Index: $index');
     setState(() {
       allianceRequestStatuses[index] = 'accepted';
     });
-    print('✅ MAIN SCREEN - Status changed to: ${allianceRequestStatuses[index]}');
-    
+    print(
+      '✅ MAIN SCREEN - Status changed to: ${allianceRequestStatuses[index]}',
+    );
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('✅ Request Accepted in Main Screen!'),
@@ -1518,14 +1525,16 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
-  
+
   void _rejectAllianceRequest(int index) {
     print('🔴 MAIN SCREEN - REJECT REQUEST CALLED - Index: $index');
     setState(() {
       allianceRequestStatuses[index] = 'rejected';
     });
-    print('❌ MAIN SCREEN - Status changed to: ${allianceRequestStatuses[index]}');
-    
+    print(
+      '❌ MAIN SCREEN - Status changed to: ${allianceRequestStatuses[index]}',
+    );
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('❌ Request Rejected in Main Screen'),
@@ -1534,7 +1543,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
-  
+
   void _openAllianceMessage() {
     print('💬 MAIN SCREEN - MESSAGE BUTTON CLICKED');
     ScaffoldMessenger.of(context).showSnackBar(
@@ -1601,7 +1610,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildMainScreenPendingRequestItem(int index) {
     String status = allianceRequestStatuses[index];
     print('📋 MAIN SCREEN - Building item $index with status: $status');
-    
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.h),
       child: Card(
@@ -1656,15 +1665,15 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ],
               ),
-              
+
               SizedBox(height: 16.h),
-              
+
               // Bottom Row - Action Buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  if (status == 'pending') ...
-                    _buildMainScreenPendingButtons(index)
+                  if (status == 'pending')
+                    ..._buildMainScreenPendingButtons(index)
                   else if (status == 'accepted')
                     _buildMainScreenAcceptedButton()
                   else if (status == 'rejected')
@@ -1677,17 +1686,13 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
-  
+
   List<Widget> _buildMainScreenPendingButtons(int index) {
     return [
       // Accept Button
       ElevatedButton.icon(
         onPressed: () => _acceptAllianceRequest(index),
-        icon: Icon(
-          Icons.check_circle,
-          size: 18.sp,
-          color: Colors.white,
-        ),
+        icon: Icon(Icons.check_circle, size: 18.sp, color: Colors.white),
         label: Text(
           'Accept',
           style: TextStyle(
@@ -1699,27 +1704,20 @@ class _MainScreenState extends State<MainScreen> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.green,
           foregroundColor: Colors.white,
-          padding: EdgeInsets.symmetric(
-            horizontal: 16.w,
-            vertical: 8.h,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.r),
           ),
           elevation: 2,
         ),
       ),
-      
+
       SizedBox(width: 12.w),
-      
+
       // Reject Button
       ElevatedButton.icon(
         onPressed: () => _rejectAllianceRequest(index),
-        icon: Icon(
-          Icons.cancel,
-          size: 18.sp,
-          color: Colors.white,
-        ),
+        icon: Icon(Icons.cancel, size: 18.sp, color: Colors.white),
         label: Text(
           'Reject',
           style: TextStyle(
@@ -1731,28 +1729,20 @@ class _MainScreenState extends State<MainScreen> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.red,
           foregroundColor: Colors.white,
-          padding: EdgeInsets.symmetric(
-            horizontal: 16.w,
-            vertical: 8.h,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.r),
           ),
           elevation: 2,
         ),
       ),
-      
     ];
   }
 
   Widget _buildMainScreenAcceptedButton() {
     return ElevatedButton.icon(
       onPressed: _openAllianceMessage,
-      icon: Icon(
-        Icons.message,
-        size: 18.sp,
-        color: Colors.white,
-      ),
+      icon: Icon(Icons.message, size: 18.sp, color: Colors.white),
       label: Text(
         'Message',
         style: TextStyle(
@@ -1764,10 +1754,7 @@ class _MainScreenState extends State<MainScreen> {
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF2E5BFF),
         foregroundColor: Colors.white,
-        padding: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 10.h,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25.r),
         ),
@@ -1778,26 +1765,16 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildMainScreenRejectedBadge() {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 16.w,
-        vertical: 8.h,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       decoration: BoxDecoration(
         color: Colors.red.withOpacity(0.1),
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(
-          color: Colors.red.withOpacity(0.5),
-          width: 1.5,
-        ),
+        border: Border.all(color: Colors.red.withOpacity(0.5), width: 1.5),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.block,
-            color: Colors.red,
-            size: 16.sp,
-          ),
+          Icon(Icons.block, color: Colors.red, size: 16.sp),
           SizedBox(width: 4.w),
           Text(
             'Rejected',

@@ -7,17 +7,19 @@ import '../screens/verification_screen.dart';
 import '../screens/reset_password_screen.dart';
 import '../screens/create_password_screen.dart';
 import '../screens/main_screen.dart';
+import '../screens/notification_screen.dart';
 
 class AppRoutes {
   static const String splash = '/';
-  static const String main = '/main';  // Single main screen for all navigation
+  static const String main = '/main'; // Single main screen for all navigation
   static const String welcome = '/welcome';
   static const String login = '/login';
   static const String signup = '/signup';
   static const String verification = '/verification';
   static const String resetPassword = '/reset-password';
   static const String createPassword = '/create-password';
-  
+  static const String notifications = '/notifications';
+
   // Legacy routes - can be removed later
   static const String home = '/main';
   static const String dashboard = '/main';
@@ -32,6 +34,7 @@ class AppRoutes {
     signup: (context) => const SignupScreen(),
     resetPassword: (context) => const ResetPasswordScreen(),
     createPassword: (context) => const CreatePasswordScreen(),
+    notifications: (context) => const NotificationScreen(),
   };
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
